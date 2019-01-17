@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="libs/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/design.css">
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script src="js/db.js"></script>
+    <script>
+        function login(){
+            var userid = document.querySelector("#userid").value;
+            var password = document.querySelector("#password").value;
+            var userObject = firebase.database().ref('/users/'+userid);
+            userObject.on('value',(snapshot)=>{
+                var obj = snapshot.val();
+                if(obj && obj.password==password){
+                    document.querySelector("#result").innerText="Login SuccessFully";
+                    if(obj.role=='T'){
+                        
+                        location.href="inex.html";
+                    }
+                }
+                else{
+                    document.querySelector("#result").innerText="Invalid Userid or Password";
+                }
+            })
+        }
+
+        function register(){
+            var userid = document.querySelector("#userid").value;
+            var password = document.querySelector("#password").value;
+            var type = document.querySelector("#type").value;
+            var userObject = {
+                "userid":userid,
+                "password":password,
+                "type":type
+            };
+            //firebase database
+            
+            promise.then(data=>{
+                console.log("User Added");
+                document.querySelector("#result").innerText="User Register";
+            }).catch(err=>{
+                console.log("Error is",err);
+                document.querySelector("#result").innerText="Can't Register";
+            })
+        }
+    </script>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>User</h1>
+        <h2 id="result"></h2>
+        <div class="form-group">
+            <label for="">Userid</label>
+            <input type="text" class="form-control" name="" id="userid" placeholder="Type User id">
+        </div>
+        <div class="form-group">
+                <label for="">Password</label>
+                <input type="password" class="form-control" name="" id="password" placeholder="Type Password">
+            </div>
+        <div class="form-group">
+            <label>Role</label>
+            <select name="" id="type" class="form-contorl">
+                <options value="T">Teacher</options>
+                <options value="S">Student</options>
+            </select>
+        </div>
+            <div class="form-group">
+                <button class="btn btn-primary" onclick="login()"><i class="fas fa-sign-in-alt"></i>Login</button>
+                <button class="btn btn-success" onclick="register()" id="register"><i class="fas fa-user-plus"></i>Register</button>
+            </div>
+
+    </div>
+</body>
+</html>
